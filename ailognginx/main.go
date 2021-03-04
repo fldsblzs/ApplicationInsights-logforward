@@ -11,6 +11,7 @@ func main() {
 	handler := &NginxHandler{}
 
 	common.InitFlags()
+	flag.StringVar(&handler.prefix, "prefix", "", "nginx url prefix (required)")
 	flag.StringVar(&handler.format, "format", "", "nginx log format (required)")
 	flag.BoolVar(&handler.noReject, "noreject", false, "don't reject log lines that may not parse perfectly")
 	flag.BoolVar(&handler.noQuery, "noquery", false, "don't log query params in request url")
@@ -20,6 +21,7 @@ func main() {
 }
 
 type NginxHandler struct {
+	prefix   string
 	format   string
 	noReject bool
 	noQuery  bool
@@ -40,7 +42,7 @@ func (handler *NginxHandler) Initialize(msgs *log.Logger) error {
 }
 
 func (handler *NginxHandler) Receive(line string) error {
-	t, err := handler.parser.CreateTelemetry(line)
+	t, err := handler.parser.CreateTelemetry(line, handler.prefix)
 	if err == nil && t != nil {
 		common.Track(t)
 	}

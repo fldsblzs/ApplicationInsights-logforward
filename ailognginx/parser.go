@@ -83,7 +83,7 @@ func NewLogParser(logFormat string, noReject bool, noQuery bool) (*LogParser, er
 	}, nil
 }
 
-func (parser *LogParser) CreateTelemetry(line string) (*appinsights.RequestTelemetry, error) {
+func (parser *LogParser) CreateTelemetry(line string, prefix string) (*appinsights.RequestTelemetry, error) {
 	log, err := parser.parser.ParseToMap(strings.TrimRight(line, "\r\n"))
 	if err != nil {
 		return nil, err
@@ -119,7 +119,10 @@ func (parser *LogParser) CreateTelemetry(line string) (*appinsights.RequestTelem
 		return nil, err
 	}
 
-	telem := appinsights.NewRequestTelemetry(method, url, duration, responseCode)
+	// Remove prefix from url
+	finalUrl = string.ReplaceAll(url, prefix, "");
+
+	telem := appinsights.NewRequestTelemetry(method, finalUrl, duration, responseCode)
 	telem.Timestamp = timestamp
 
 	// Optional properties
