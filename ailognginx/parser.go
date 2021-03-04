@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
-	"github.com/jjjordanmsft/ApplicationInsights-logforward/common"
+	"github.com/microsoft/ApplicationInsights-Go/appinsights"
+	"github.com/fldsblzs/ApplicationInsights-logforward/common"
 )
 
 const (
